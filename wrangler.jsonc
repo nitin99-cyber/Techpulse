@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "techpulse",
+  "main": ".cloudflare/worker.js",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "techpulse-db",
+      "database_id": "local-techpulse-db"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "JOB_QUEUE",
+        "queue": "techpulse-jobs"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "techpulse-jobs",
+        "max_batch_size": 5,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+        "dead_letter_queue": "techpulse-jobs-dlq"
+      }
+    ]
+  },
+  "triggers": {
+    "crons": [
+      "0 */3 * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true
+  }
+}
